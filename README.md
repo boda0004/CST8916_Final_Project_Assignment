@@ -18,7 +18,9 @@ This system facilitates quicker and more precious findings which will help Natio
 ![Rideau Canal drawio1](https://github.com/user-attachments/assets/0a95f3e8-77fe-45ee-a4fe-9c9e436c3994)
 
 # Implementation Details:
+
 **IoT Sensor Simulation**
+
 To simulate real-time ice monitoring, we created three Python scripts, each acting as a virtual IoT device for a specific location:
 
 dow_lake_simulator.py
@@ -54,6 +56,7 @@ This data is formatted in JSON and sent to Azure IoT Hub using the Azure IoT Dev
 Each script uses a device-specific connection string and pushes data every 10 seconds.
 
 **Azure IoT Hub Configuration**
+
 I created an Azure IoT Hub named RideauSkatewayHub.
 Under the hub, I registered three devices:
 
@@ -118,6 +121,50 @@ This query uses 5-minute tumbling window to group and analyze data by location.
 This allows near real-time aggregation of safety metrics for each monitored location.
 
 # Azure Blob Storage
+Processed data is saved in an Azure Storage account (rideauskatewaystore) under a container called processed-data.
+
+**Folder Structure**
+
+    skateway/YYYY/MM/DD/HH/
+    
+**File Format:** JSON 
+
+**Example Blob Path:**
+
+    skateway/2025/04/09/17/
+**Sample Output JSON:**
+
+    {
+      "location": "Dow's Lake",
+      "windowEnd": "2025-04-09T17:40:00Z",
+      "avgIceThickness": 27.2,
+      "maxSnowAccumulation": 14
+    }
+
+# Usage Instructions:
+
+**Running the IoT Sensor Simulation**
+1.Install dependencies
+
+    pip install azure-iot-device
+
+Navigate to the sensor-simulation/ directory in your project folder.
+
+Open three terminal windows or tabs, one for each script.
+
+Run each script using:
+
+    python dow_lake_simulator.py
+    python fifth_ave_simulator.py
+    python nac_simulator.py
+
+The scripts will send live telemetry (every 10 seconds) to the Azure IoT Hub using each device’s unique connection string.
+
+**Configuring Azure Services**
+
+
+
+
 
 
 
