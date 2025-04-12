@@ -23,23 +23,23 @@ This system facilitates quicker and more precious findings which will help Natio
 
 To simulate real-time ice monitoring, we created three Python scripts, each acting as a virtual IoT device for a specific location:
 
-dow_lake_simulator.py
+- dow_lake_simulator.py
 
-fifth_ave_simulator.py
+- fifth_ave_simulator.py
 
-nac_simulator.py
+- nac_simulator.py
 
 Each script generates random values for:
 
-Ice Thickness (cm)
+- Ice Thickness (cm)
 
-Surface Temperature (°C)
+- Surface Temperature (°C)
 
-Snow Accumulation (cm)
+- Snow Accumulation (cm)
 
-External Temperature (°C)
+- External Temperature (°C)
 
-Timestamp (ISO UTC format)
+- Timestamp (ISO UTC format)
 
 This data is formatted in JSON and sent to Azure IoT Hub using the Azure IoT Device SDK.
 
@@ -60,23 +60,23 @@ Each script uses a device-specific connection string and pushes data every 10 se
 I created an Azure IoT Hub named RideauSkatewayHub.
 Under the hub, I registered three devices:
 
-DowLakeDevice
+- DowLakeDevice
 
-FifthAveDevice
+- FifthAveDevice
 
-NACDevice
+-NACDevice
 
 Each device uses symmetric key authentication and its unique connection string.
 
 Steps Followed:
 
-Created IoT Hub in Canada Central region.
+- Created IoT Hub in Canada Central region.
 
-Added devices under IoT Devices tab.
+- Added devices under IoT Devices tab.
 
-Copied each connection string into its matching simulator script.
+- Copied each connection string into its matching simulator script.
 
-Used messages/events as the default endpoint.
+- Used messages/events as the default endpoint.
 
 **Azure Stream Analytics Job**
 
