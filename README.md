@@ -79,29 +79,32 @@ Copied each connection string into its matching simulator script.
 Used messages/events as the default endpoint.
 
 **Azure Stream Analytics Job**
+
 I created a Stream Analytics job called SkatewayAnalytics to process incoming sensor data in real-time.
 
 Input Configuration:
-Type: IoT Hub
 
-Input Alias: RideauSkatewayHubInput
+-Type: IoT Hub
 
-Serialization: JSON
+-Input Alias: RideauSkatewayHubInput
 
-Encoding: UTF-8
+-Serialization: JSON
+
+-Encoding: UTF-8
 
 Output Configuration:
-Type: Azure Blob Storage
 
-Output Alias: processed-data-blobOutput
+-Type: Azure Blob Storage
 
-Container: processed-data
+-Output Alias: processed-data-blobOutput
 
-Format: JSON (line-separated)
+-Container: processed-data
 
-Path pattern: skateway/{date}/{time}
+-Format: JSON (line-separated)
 
-Write mode: Append
+-Path pattern: skateway/{date}/{time}
+
+-Write mode: Append
 
 **Query Logic:**
 
@@ -160,11 +163,162 @@ Run each script using:
 
 The scripts will send live telemetry (every 10 seconds) to the Azure IoT Hub using each device’s unique connection string.
 
+
 **Configuring Azure Services**
 
+**IoT Hub Setup**
+
+-Go to the Azure Portal
+
+-Search and create a new IoT Hub (region: Canada Central)
+
+-Under the IoT Hub:
+
+  -Navigate to IoT Devices
+
+  -Click + New to create:
+
+   -DowLakeDevice
+
+   -FifthAveDevice
+
+   -NACDevice
+
+Copy and paste each connection string into the appropriate Python script
 
 
+**Stream Analytics Job Setup**
 
+Create a Stream Analytics Job (name: SkatewayAnalytics)
+
+Under Inputs:
+
+- Add a new input of type IoT Hub
+
+- Set alias to RideauSkatewayHubInput
+
+- Select All Devices and JSON format
+
+Under Outputs:
+
+- Add an output of type Blob Storage
+
+- Set alias: processed-data-blobOutput
+
+- Use your existing storage account and container processed-data
+
+- Format: JSON, line separated
+
+- Path pattern: skateway/{date}/{time}
+
+Under Query, paste the following:
+
+    SELECT
+        location,
+        System.Timestamp AS windowEnd,
+        AVG(CAST(iceThickness AS float)) AS avgIceThickness,
+        MAX(CAST(snowAccumulation AS float)) AS maxSnowAccumulation
+    INTO
+        [processed-data-blobOutput]
+    FROM
+        [RideauSkatewayHubInput] TIMESTAMP BY timestamp
+    GROUP BY
+        TumblingWindow(minute, 5), location
+
+- Click Save Query, then Start Job > Choose Now > Start
+
+**Accessing Stored Data in Blob Storage**
+
+- Go to your Storage Account in Azure
+
+- Open the Containers section and select processed-data
+
+- Navigate the folders based on the date and hour:
+
+        skateway/2025/04/09/17/
+
+- Open or download the output files (JSON or CSV)
+
+  - Each file contains results grouped by location and time window
+
+  - Use tools like Notepad, VS Code, or Excel to view the data
+
+- Example file content:
+
+        {
+          "location": "Fifth Avenue",
+          "windowEnd": "2025-04-09T17:45:00Z",
+          "avgIceThickness": 28.4,
+          "maxSnowAccumulation": 13
+        }
+
+# Results:
+
+After we operated the counterfeit IoT sensors and transmitted the data via Azure Stream Analytics, the system functioned effectively and provided us with a summary of the outcomes every 5 minutes for each location: Dow’s Lake, Fifth Avenue, and NAC.
+
+**Key Findings:**
+
+- The system captured real-time ice safety data at 10-second intervals.
+
+- Data was aggregated in 5-minute windows by location using Stream Analytics.
+
+- Results include:
+
+  - Average Ice Thickness
+
+  - Maximum Snow Accumulation
+
+**Sample Output (from Azure Blob Storage)**
+
+Container Path:
+
+    skateway/2025/04/09/17/
+
+Sample JSON File:
+
+    {
+      "location": "Dow's Lake",
+      "windowEnd": "2025-04-09T17:45:00Z",
+      "avgIceThickness": 27.6,
+      "maxSnowAccumulation": 12
+    }
+
+
+This output confirms that the system is:
+
+- Grouping data correctly by location
+
+- Capturing trends across time
+
+- Ready for future use in dashboards, alerts, or decision-making tools
+
+
+# Reflection
+
+**Challenges Faced:**
+
+Start Job Button Not Working (Azure Stream Analytics).
+
+At one time, the “Start job” button in the Azure portal appeared to be disabled, even though all configurations were correct.
+Fix: The problem was fixed by saving the query, refreshing the portal, and initiating the job from the Overview tab or by utilizing the Azure CLI.
+
+Real-Time Data Testing.
+
+Emulating three distinct IoT devices necessitated executing several scripts concurrently and observing their output separately.
+Fix: Launched three terminal windows and executed each script with the correct device connection string.
+
+Azure IoT Hub Configuration Confusion.
+
+Determining which connection string to apply to each device was initially perplexing.
+Fix: Diligently aligned each device’s connection string with the appropriate script and included comments in the code.
+
+Blob Storage Output Structure.
+
+The original folder path and output configuration needed verification to make sure that files were correctly saved and accessible.
+Fix: Modified the path pattern and verified that data was saved in line-separated JSON format for straightforward parsing.
+
+
+# 
 
 
 
