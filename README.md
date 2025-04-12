@@ -84,27 +84,27 @@ I created a Stream Analytics job called SkatewayAnalytics to process incoming se
 
 Input Configuration:
 
--Type: IoT Hub
+- Type: IoT Hub
 
--Input Alias: RideauSkatewayHubInput
+- Input Alias: RideauSkatewayHubInput
 
--Serialization: JSON
+- Serialization: JSON
 
--Encoding: UTF-8
+- Encoding: UTF-8
 
 Output Configuration:
 
--Type: Azure Blob Storage
+- Type: Azure Blob Storage
 
--Output Alias: processed-data-blobOutput
+- Output Alias: processed-data-blobOutput
 
--Container: processed-data
+- Container: processed-data
 
--Format: JSON (line-separated)
+- Format: JSON (line-separated)
 
--Path pattern: skateway/{date}/{time}
+- Path pattern: skateway/{date}/{time}
 
--Write mode: Append
+- Write mode: Append
 
 **Query Logic:**
 
@@ -168,21 +168,21 @@ The scripts will send live telemetry (every 10 seconds) to the Azure IoT Hub usi
 
 **IoT Hub Setup**
 
--Go to the Azure Portal
+- Go to the Azure Portal
 
--Search and create a new IoT Hub (region: Canada Central)
+- Search and create a new IoT Hub (region: Canada Central)
 
--Under the IoT Hub:
+- Under the IoT Hub:
 
-  -Navigate to IoT Devices
+  - Navigate to IoT Devices
 
-  -Click + New to create:
+  - Click + New to create:
 
-   -DowLakeDevice
+   - DowLakeDevice
 
-   -FifthAveDevice
+   - FifthAveDevice
 
-   -NACDevice
+   - NACDevice
 
 Copy and paste each connection string into the appropriate Python script
 
