@@ -2,7 +2,7 @@ from azure.iot.device import IoTHubDeviceClient, Message
 import time, random, json
 from datetime import datetime
 
-CONNECTION_STRING = "HostName=RideauSkatewayHub.azure-devices.net;DeviceId=NACDevice;SharedAccessKey=6y26DmTEOy7z5s8XnZ3Gaa/OQNT7tDe7cnPlr7joKuI="
+CONNECTION_STRING = 
 
 def generate_data():
     return {
